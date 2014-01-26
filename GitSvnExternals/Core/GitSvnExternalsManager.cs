@@ -92,9 +92,13 @@ namespace GitSvnExternals.Core
             var externalsDir = Path.Combine(_repoPath, ".git_externals");
 
             if (!Directory.Exists(externalsDir))
-                Directory.CreateDirectory(externalsDir);
+            {
+                var externalsStore = Directory.CreateDirectory(externalsDir);
+                externalsStore.Attributes |= FileAttributes.Hidden;
+            }
 
             svnExternal.Clone(_commandRunner, _repoPath);
+            svnExternal.Link(_repoPath);
         }
 
         public void CloneAllExternals()

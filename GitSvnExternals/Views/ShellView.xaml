@@ -16,10 +16,21 @@
         <StackPanel Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
                 <TextBlock VerticalAlignment="Center">Repository:</TextBlock>
-                <TextBox Width="200" Margin="5,0,0,0" VerticalAlignment="Center">Paste reprepo path here...</TextBox>
-                <Button Style="{StaticResource CommandButton}">Get Externals</Button>
-                <Button Style="{StaticResource CommandButton}">Clone All</Button>
+                <TextBox Width="200" Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding RepoPath}"></TextBox>
+                <Button x:Name="GetExternals" Style="{StaticResource CommandButton}">Get Externals</Button>
+                <Button x:Name="CloneAll" Style="{StaticResource CommandButton}">Clone All</Button>
             </StackPanel>
+
+            <ListBox ItemsSource="{Binding Externals}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">                                                        
+                            <TextBlock Text="{Binding LocalPath}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
         </StackPanel>
     </Grid>
 </UserControl>
