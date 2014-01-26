@@ -34,7 +34,7 @@ namespace GitSvnExternals.Core
 
         private IEnumerable<SvnExternal> RetriveExternals()
         {
-            using (var reader = _commandRunner.Run("git", "svn show-externals", _repoPath))
+            using (var reader = _commandRunner.Run(new CommandWithArgs("git", "svn show-externals"), _repoPath))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)
@@ -70,6 +70,16 @@ namespace GitSvnExternals.Core
             int pathIndex = uriIndex == 0 ? 1 : 0;
 
             return new SvnExternal(new Uri(externalUri.Substring(1)), columns[pathIndex]);
+        }
+
+        public void Clone(SvnExternal svnExternal)
+        {
+            var externalsDir = Path.Combine(_repoPath, ".git_externals");
+
+            if (!Directory.Exists(externalsDir))
+                Directory.CreateDirectory(externalsDir);
+
+            svnExternal.Clone(_commandRunner, _repoPath);
         }
     }
 }

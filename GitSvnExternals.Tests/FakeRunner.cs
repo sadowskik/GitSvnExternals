@@ -9,23 +9,23 @@ namespace GitSvnExternals.Tests
     {
         public string ReturnedSvnExternals { get; set; }
 
-        public List<string> ExecutedCommands { get; private set; }
+        public List<CommandWithArgs> ExecutedCommands { get; private set; }
 
         public FakeRunner()
         {
-            ExecutedCommands = new List<string>();
+            ExecutedCommands = new List<CommandWithArgs>();
         }
-
-        public StreamReader Run(string command, string arguments, string workingDir = "")
+        
+        public StreamReader Run(CommandWithArgs commandWithArgs, string workingDir)
         {
-            ExecutedCommands.Add(string.Format("{0} {1}", command, arguments));
+            ExecutedCommands.Add(commandWithArgs);
 
             byte[] payload = {};
 
-            if (command == "git" && arguments == "svn show-externals")
+            if (commandWithArgs.Command == "git" && commandWithArgs.Arguments == "svn show-externals")
                 payload = Encoding.UTF8.GetBytes(ReturnedSvnExternals);
 
             return new StreamReader(new MemoryStream(payload));
         }
-    }
+    }    
 }

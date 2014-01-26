@@ -11,7 +11,10 @@ namespace GitSvnExternals.Tests
         public void retrives_externals()
         {
             var consoleRunner = new ConsoleRunner();
-            var resultReader = consoleRunner.Run("git", "svn show-externals", @"C:\Projects\testsvngit2");
+            
+            var resultReader = consoleRunner.Run(
+                new CommandWithArgs("git", "svn show-externals"),
+                @"C:\Projects\testsvngit2");
 
             Check.That(resultReader.ReadToEnd()).IsNotEmpty();
         }

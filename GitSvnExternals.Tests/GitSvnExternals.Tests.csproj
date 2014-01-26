@@ -52,7 +52,7 @@
   <ItemGroup>
     <Compile Include="CommandRunnerTests.cs" />
     <Compile Include="FakeRunner.cs" />
-    <Compile Include="GitSvnTests.cs" />
+    <Compile Include="GitSvnExternalsManagerTests.cs" />
     <Compile Include="LongRunning.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
