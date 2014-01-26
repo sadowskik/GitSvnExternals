@@ -7,6 +7,11 @@ namespace GitSvnExternals.Core
         public Uri RemotePath { get; private set; }
         public string LocalPath { get; private set; }
 
+        public static SvnExternal Empty
+        {
+            get { return new SvnExternal(null, null); }
+        }
+
         public SvnExternal(Uri remotePath, string localPath)
         {
             RemotePath = remotePath;

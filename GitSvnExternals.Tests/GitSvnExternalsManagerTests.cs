@@ -6,25 +6,27 @@ using Xunit;
 
 namespace GitSvnExternals.Tests
 {
-    public class GitSvnTests
+    public class GitSvnExternalsManagerTests
     {
-        private readonly GitSvn _gitSvn;
-        
-        public GitSvnTests()
+        private readonly GitSvnExternalsManager _gitSvnExternalsManager;
+
+        public GitSvnExternalsManagerTests()
         {
-            _gitSvn = new GitSvn(@"C:\Projects\testsvngit2", new FakeRunner {SvnExternals = Externals});
+            _gitSvnExternalsManager = new GitSvnExternalsManager(
+                repoPath: @"C:\Projects\testsvngit2",
+                commandRunner: new FakeRunner {ReturnedSvnExternals = Externals});
         }
 
         [Fact]        
         public void checks_if_dir_is_a_git_repository()
         {
-            Check.That(_gitSvn.IsGitSvnRepo).IsTrue();
+            Check.That(_gitSvnExternalsManager.IsGitSvnRepo).IsTrue();
         }
 
         [Fact]               
         public void retrives_git_svn_externals()
         {
-            var externals = _gitSvn.Externals.ToList();
+            var externals = _gitSvnExternalsManager.Externals.ToList();
 
             Check.That(externals).ContainsExactly(new[]
             {

@@ -7,7 +7,7 @@ namespace GitSvnExternals.Tests
 {
     public class FakeRunner : IRunCommand
     {
-        public string SvnExternals { get; set; }
+        public string ReturnedSvnExternals { get; set; }
 
         public List<string> ExecutedCommands { get; private set; }
 
@@ -23,7 +23,7 @@ namespace GitSvnExternals.Tests
             byte[] payload = {};
 
             if (command == "git" && arguments == "svn show-externals")
-                payload = Encoding.UTF8.GetBytes(SvnExternals);
+                payload = Encoding.UTF8.GetBytes(ReturnedSvnExternals);
 
             return new StreamReader(new MemoryStream(payload));
         }
