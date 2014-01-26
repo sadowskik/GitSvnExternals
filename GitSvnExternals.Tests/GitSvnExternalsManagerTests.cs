@@ -71,6 +71,18 @@ namespace GitSvnExternals.Tests
             Check.That(cloneCommand.Arguments).IsEqualTo(@"svn clone -r HEAD https://subversion.assembla.com/svn/svnandgittest/trunk/Externals .git_externals\.buildtools");
         }
 
+        [Fact]
+        public void links_external_to_cloned_dir()
+        {
+            var external = new DirectoryExternal(
+                remotePath: new Uri(@"https://subversion.assembla.com/svn/svnandgittest/trunk/Externals"),
+                localPath: ".buildtools");
+
+            external.Link(TestRepoPath);
+
+            Check.That(Directory.Exists(TestRepoPath + @"\.buildtools")).IsTrue();
+        }
+
         private const string TestRepoPath = @"C:\Projects\testsvngit2";
 
         private const string Externals = @"

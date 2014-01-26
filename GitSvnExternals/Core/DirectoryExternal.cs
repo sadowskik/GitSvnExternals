@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace GitSvnExternals.Core
 {
@@ -18,7 +19,11 @@ namespace GitSvnExternals.Core
         }
 
         public override void Link(string workingDir)
-        {            
+        {
+            var link = Path.GetFullPath(Path.Combine(workingDir, LocalPath));
+            var target = Path.GetFullPath(Path.Combine(workingDir, ".git_externals", LocalPath));
+
+            CreateLink(link, target, LinkTypeFlag.Directory);
         }
     }
 }

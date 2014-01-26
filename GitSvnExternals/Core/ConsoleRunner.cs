@@ -5,7 +5,7 @@ namespace GitSvnExternals.Core
 {
     public class ConsoleRunner : IRunCommand
     {
-        public StreamReader Run(CommandWithArgs commandWithArgs, string workingDir)
+        public StreamReader Run(CommandWithArgs commandWithArgs, string workingDir ="")
         {
             var process = Process.Start(new ProcessStartInfo(commandWithArgs.Command, commandWithArgs.Arguments)
             {

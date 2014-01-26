@@ -1,9 +1,20 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 
 namespace GitSvnExternals.Core
 {
     public class SvnExternal : IEquatable<SvnExternal>
     {
+        protected enum LinkTypeFlag
+        {
+            File = 0,
+            Directory = 1
+        }
+
+        [DllImport("kernel32.dll")]
+        [return: MarshalAs(UnmanagedType.I1)]
+        private static extern bool CreateSymbolicLink(string lpSymlinkFileName, string lpTargetFileName, LinkTypeFlag dwFlags);
+
         public Uri RemotePath { get; private set; }
         public string LocalPath { get; private set; }
 
@@ -24,6 +35,11 @@ namespace GitSvnExternals.Core
 
         public virtual void Link(string workingDir)
         {
+        }
+
+        protected bool CreateLink(string link, string target, LinkTypeFlag type)
+        {
+            return CreateSymbolicLink(link, target, type);
         }
 
         public bool Equals(SvnExternal other)
