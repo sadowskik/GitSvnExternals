@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandRunnerTests.cs" />
+    <Compile Include="DirectorySvnExternalTests.cs" />
     <Compile Include="FakeRunner.cs" />
     <Compile Include="GitSvnExternalsManagerTests.cs" />
     <Compile Include="LongRunning.cs" />
