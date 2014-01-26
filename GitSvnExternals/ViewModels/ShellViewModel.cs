@@ -13,7 +13,7 @@ namespace GitSvnExternals.ViewModels
         {
             RepoPath = "Paste your repo path here...";
         }
-
+        
         public void GetExternals()
         {
             var manager = new GitSvnExternalsManager(RepoPath, new ConsoleRunner());
