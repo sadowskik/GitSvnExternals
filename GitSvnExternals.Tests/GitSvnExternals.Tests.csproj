@@ -53,6 +53,7 @@
     <Compile Include="CommandRunnerTests.cs" />
     <Compile Include="DirectorySvnExternalTests.cs" />
     <Compile Include="FakeRunner.cs" />
+    <Compile Include="FileExternalTests.cs" />
     <Compile Include="GitSvnExternalsManagerTests.cs" />
     <Compile Include="LongRunning.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

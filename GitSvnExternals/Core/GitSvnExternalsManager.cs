@@ -96,5 +96,11 @@ namespace GitSvnExternals.Core
 
             svnExternal.Clone(_commandRunner, _repoPath);
         }
+
+        public void CloneAllExternals()
+        {
+            foreach (var svnExternal in Externals)
+                Clone(svnExternal);
+        }
     }
 }

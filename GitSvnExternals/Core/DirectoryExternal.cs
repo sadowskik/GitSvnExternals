@@ -11,11 +11,11 @@ namespace GitSvnExternals.Core
         }
 
         public override void Clone(IRunCommand runner, string workingDir)
-        {
+        {            
             var args = string.Format(@"svn clone -r HEAD {0} .git_externals\{1}", RemotePath, LocalPath);
             var cmd = new CommandWithArgs("git", args);
 
-            runner.Run(cmd);
+            runner.Run(cmd, workingDir);
         }
 
         public override void Link(string workingDir)
