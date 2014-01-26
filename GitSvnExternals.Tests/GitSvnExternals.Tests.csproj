@@ -50,11 +50,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="CommandRunnerTests.cs" />
+    <Compile Include="FakeRunner.cs" />
+    <Compile Include="GitSvnTests.cs" />
+    <Compile Include="LongRunning.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\GitSvnExternals\GitSvnExternals.csproj">
+      <Project>{B892973E-93CF-4E7E-8069-C123F06F1E57}</Project>
+      <Name>GitSvnExternals</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
