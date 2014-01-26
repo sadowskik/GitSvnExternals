@@ -63,6 +63,8 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Core\ConsoleRunner.cs" />
+    <Compile Include="Core\DirectoryExternal.cs" />
+    <Compile Include="Core\FileExternal.cs" />
     <Compile Include="Core\GitSvnExternalsManager.cs" />
     <Compile Include="Core\IRunCommand.cs" />
     <Compile Include="Core\SvnExternal.cs" />

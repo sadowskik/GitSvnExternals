@@ -32,18 +32,26 @@ namespace GitSvnExternals.Tests
         {
             var externals = _gitSvnExternalsManager.Externals.ToList();
 
-            Check.That(externals).ContainsExactly(new[]
+            Check.That(externals).ContainsExactly(new SvnExternal[]
             {
-                new SvnExternal(new Uri(@"https://subversion.assembla.com/svn/svnandgittest/trunk/Externals"), ".buildtools"),
-                new SvnExternal(new Uri(@"https://subversion.assembla.com/svn/svnandgittest/trunk/ExternalsWithFile1/x.txt"), "x.txt"),
-                new SvnExternal(new Uri(@"https://subversion.assembla.com/svn/svnandgittest/trunk/ExternalsWithFile2/y.txt"), "y.txt")
+                new DirectoryExternal(
+                    new Uri(@"https://subversion.assembla.com/svn/svnandgittest/trunk/Externals"),
+                    ".buildtools"),
+
+                new FileExternal(new Uri(
+                    @"https://subversion.assembla.com/svn/svnandgittest/trunk/ExternalsWithFile1/x.txt"),
+                    "x.txt"),
+
+                new FileExternal(
+                    new Uri(@"https://subversion.assembla.com/svn/svnandgittest/trunk/ExternalsWithFile2/y.txt"),
+                    "y.txt")
             });
         }
 
         [Fact]
         public void stores_externals_in_specific_directory()
         {
-            _gitSvnExternalsManager.Clone(new SvnExternal(
+            _gitSvnExternalsManager.Clone(new DirectoryExternal(
                 remotePath: new Uri(@"https://subversion.assembla.com/svn/svnandgittest/trunk/Externals"),
                 localPath: ".buildtools"));
 
@@ -53,7 +61,7 @@ namespace GitSvnExternals.Tests
         [Fact]
         public void clones_external_as_a_separate_repository()
         {
-            _gitSvnExternalsManager.Clone(new SvnExternal(
+            _gitSvnExternalsManager.Clone(new DirectoryExternal(
                 remotePath: new Uri(@"https://subversion.assembla.com/svn/svnandgittest/trunk/Externals"),
                 localPath: ".buildtools"));
 

@@ -12,23 +12,18 @@ namespace GitSvnExternals.Core
             get { return new SvnExternal(null, null); }
         }
 
-        public SvnExternal(Uri remotePath, string localPath)
+        protected SvnExternal(Uri remotePath, string localPath)
         {
             RemotePath = remotePath;
             LocalPath = localPath;
         }
-        
-        public void Clone(IRunCommand runner, string workingDir)
-        {
-            var args = string.Format(@"svn clone -r HEAD {0} .git_externals\{1}", RemotePath, LocalPath);
-            var cmd = new CommandWithArgs("git", args);
 
-            runner.Run(cmd);
+        public virtual void Clone(IRunCommand runner, string workingDir)
+        {
         }
 
-        public void Link(string workingDir)
+        public virtual void Link(string workingDir)
         {
-            
         }
 
         public bool Equals(SvnExternal other)

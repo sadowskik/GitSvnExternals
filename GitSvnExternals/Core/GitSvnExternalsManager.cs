@@ -52,24 +52,39 @@ namespace GitSvnExternals.Core
             if (string.IsNullOrEmpty(line))
                 return SvnExternal.Empty;
 
-            var columns = line.Split(' ');
+            var columns = line.Split(' ').ToList();
 
-            if (columns.Length != 2)
+            if (CannotBeParsed(columns))
                 return SvnExternal.Empty;
-
-            if (string.IsNullOrEmpty(columns[0]) || string.IsNullOrEmpty(columns[1]))
-                return SvnExternal.Empty;
-
+            
             var externalUri = columns
                 .FirstOrDefault(x => Uri.IsWellFormedUriString(x.Substring(1), UriKind.Absolute));
 
             if (externalUri == null)
                 return SvnExternal.Empty;
 
-            var uriIndex = Array.BinarySearch(columns, externalUri);
+            var localPath = ExtractLocalPath(columns, externalUri);
+
+            if (Path.HasExtension(localPath) && Path.GetExtension(localPath) != localPath)
+                return new FileExternal(new Uri(externalUri.Substring(1)), localPath);
+
+            return new DirectoryExternal(new Uri(externalUri.Substring(1)), localPath);
+        }
+
+        private static string ExtractLocalPath(IList<string> columns, string externalUri)
+        {
+            var uriIndex = columns.IndexOf(externalUri);
             int pathIndex = uriIndex == 0 ? 1 : 0;
 
-            return new SvnExternal(new Uri(externalUri.Substring(1)), columns[pathIndex]);
+            var localPath = columns[pathIndex];
+            return localPath;
+        }
+
+        private static bool CannotBeParsed(IReadOnlyList<string> columns)
+        {
+            return columns.Count != 2
+                   || string.IsNullOrEmpty(columns[0])
+                   || string.IsNullOrEmpty(columns[1]);
         }
 
         public void Clone(SvnExternal svnExternal)
