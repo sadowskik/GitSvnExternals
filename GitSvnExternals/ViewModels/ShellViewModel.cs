@@ -11,6 +11,7 @@ namespace GitSvnExternals.ViewModels
         private string _repoPath;
         private ObservableCollection<SvnExternalViewModel> _externals;        
         private SvnExternalViewModel _newExternal;
+        private SvnExternalViewModel _selectedExternal;
 
         public ShellViewModel()
         {
@@ -22,14 +23,23 @@ namespace GitSvnExternals.ViewModels
 
         public void GetExternals()
         {
-            var manager = new GitSvnExternalsManager(RepoPath, new ConsoleRunner());
-
-            if (!manager.IsGitSvnRepo)
+            if (!CanGetExternals)
                 return;
 
+            var manager = new GitSvnExternalsManager(RepoPath, new ConsoleRunner());
+            
             manager.Externals
                 .Select(MapToModel).ToList()
                 .ForEach(x => Externals.Add(x));
+        }
+
+        public bool CanGetExternals
+        {
+            get
+            {
+                var manager = new GitSvnExternalsManager(RepoPath, new ConsoleRunner());
+                return manager.IsGitSvnRepo;
+            }
         }
 
         public void CloneAll()
@@ -39,11 +49,17 @@ namespace GitSvnExternals.ViewModels
             if (!manager.IsGitSvnRepo)
                 return;
 
-            var manuallyAdded = Externals.Where(x => x.ManuallyAdded)
+            var manuallyAdded = Externals
+                .Where(x => x.ManuallyAdded)
                 .Select(MapFrom);
 
             manager.IncludeManualExternals(manuallyAdded);
             manager.CloneAllExternals();
+        }
+
+        public bool CanCloneAll
+        {
+            get { return CanGetExternals; }
         }
 
         public void AddNew()
@@ -57,7 +73,24 @@ namespace GitSvnExternals.ViewModels
             NewExternal = new SvnExternalViewModel();
         }
 
-        public static SvnExternal MapFrom(SvnExternalViewModel model)
+        public void RemoveSelected()
+        {
+            if (!CanRemoveSelected)
+                return;
+
+            Externals.Remove(SelectedExternal);
+        }
+
+        public bool CanRemoveSelected
+        {
+            get
+            {
+                return SelectedExternal != null 
+                    && SelectedExternal.ManuallyAdded;
+            }
+        }
+
+        private static SvnExternal MapFrom(SvnExternalViewModel model)
         {
             var remotePath = new Uri(model.RemotePath);
             var localPath = model.LocalPath;
@@ -72,7 +105,8 @@ namespace GitSvnExternals.ViewModels
             return new SvnExternalViewModel
             {
                 LocalPath = external.LocalPath,
-                RemotePath = external.RemotePath.ToString()
+                RemotePath = external.RemotePath.ToString(),
+                IsFile = external is FileExternal                
             };
         }
 
@@ -84,6 +118,8 @@ namespace GitSvnExternals.ViewModels
                 if (value == _repoPath) return;
                 _repoPath = value;
                 NotifyOfPropertyChange(() => RepoPath);
+                NotifyOfPropertyChange(() => CanGetExternals);
+                NotifyOfPropertyChange(() => CanCloneAll);
             }
         }
 
@@ -95,6 +131,18 @@ namespace GitSvnExternals.ViewModels
                 if (Equals(value, _externals)) return;
                 _externals = value;
                 NotifyOfPropertyChange(() => Externals);
+            }
+        }
+
+        public SvnExternalViewModel SelectedExternal
+        {
+            get { return _selectedExternal; }
+            set
+            {
+                if (Equals(value, _selectedExternal)) return;
+                _selectedExternal = value;
+                NotifyOfPropertyChange(() => SelectedExternal);
+                NotifyOfPropertyChange(() => CanRemoveSelected);
             }
         }
 

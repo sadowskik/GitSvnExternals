@@ -38,7 +38,13 @@ namespace GitSvnExternals.ViewModels
                 if (value.Equals(_isFile)) return;
                 _isFile = value;
                 NotifyOfPropertyChange(() => IsFile);
+                NotifyOfPropertyChange(() => Type);
             }
+        }
+
+        public string Type
+        {
+            get { return IsFile ? "File" : "Dir"; }
         }
 
         public bool IsValid

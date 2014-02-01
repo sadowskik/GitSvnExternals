@@ -1,11 +1,12 @@
-﻿<UserControl x:Class="GitSvnExternals.Views.ShellView"
+﻿<controls:MetroWindow x:Class="GitSvnExternals.Views.ShellView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d" Height="300" Width="600"
              d:DesignHeight="300" d:DesignWidth="500">
-    <Grid>                        
+    <Grid>
         <Grid.Resources>
             <Style x:Key="CommandButton" TargetType="Button" BasedOn="{StaticResource MetroButton}">
                 <Setter Property="Margin" Value="5,5,5,5" />
@@ -16,37 +17,37 @@
         <StackPanel Margin="5,5,5,5" Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
                 <TextBlock VerticalAlignment="Center">Repository:</TextBlock>
-                <TextBox Width="200" Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding RepoPath}"></TextBox>
+                <TextBox Width="200" Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding RepoPath}" />
                 <Button Style="{StaticResource CommandButton}" x:Name="GetExternals">Get Externals</Button>
                 <Button Style="{StaticResource CommandButton}" x:Name="CloneAll">Clone All</Button>
+                <Button Style="{StaticResource CommandButton}" x:Name="RemoveSelected">Remove</Button>
             </StackPanel>
-                        
-            <ListBox MinHeight="100" Margin="5,5,5,5" ItemsSource="{Binding Externals}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel Orientation="Horizontal">                                                        
-                            <TextBlock Text="{Binding LocalPath}" />
-                            <TextBlock Text="   " />
-                            <TextBlock Text="{Binding RemotePath}" />
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+
+            <DataGrid ItemsSource="{Binding Externals}" SelectedItem="{Binding SelectedExternal, Mode=TwoWay}"
+                      IsReadOnly="True" AutoGenerateColumns="False" Margin="5,5,5,5">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Remote" Binding="{Binding RemotePath}" />
+                    <DataGridTextColumn Header="Local" Binding="{Binding LocalPath}" />
+                    <DataGridTextColumn Header="Type" Binding="{Binding Type}" />
+                    <DataGridCheckBoxColumn Header="Manual" Binding="{Binding ManuallyAdded}" />
+                </DataGrid.Columns>
+            </DataGrid>
 
             <StackPanel Orientation="Horizontal">
                 <TextBlock VerticalAlignment="Center">Remote:</TextBlock>
-                <TextBox Width="150" Margin="20,0,0,0" VerticalAlignment="Center" Text="{Binding NewExternal.RemotePath}"></TextBox>
+                <TextBox Width="150" Margin="20,0,0,0" VerticalAlignment="Center"
+                         Text="{Binding NewExternal.RemotePath}" />
 
                 <TextBlock Margin="10,0,0,0" VerticalAlignment="Center">Local:</TextBlock>
-                <TextBox Width="150" Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding NewExternal.LocalPath}"></TextBox>
-                
-                <CheckBox Margin="10,0,0,0" IsChecked="{Binding NewExternal.IsFile}">Is File?</CheckBox>                
+                <TextBox Width="150" Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding NewExternal.LocalPath}" />
+
+                <CheckBox Margin="10,0,0,0" IsChecked="{Binding NewExternal.IsFile}">Is File?</CheckBox>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal">                
+            <StackPanel Orientation="Horizontal">
                 <Button Style="{StaticResource CommandButton}" x:Name="AddNew">Add</Button>
             </StackPanel>
 
         </StackPanel>
     </Grid>
-</UserControl>
+</controls:MetroWindow>
