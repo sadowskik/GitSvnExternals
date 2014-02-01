@@ -1,0 +1,30 @@
+
+# /
+/.buildtools svn://war01svn/rep/mbank_14.1/dev/BuildTools/Externals
+
+# /Maelstrom.Cassandra.Client/
+
+# /Maelstrom.Cassandra.Client.Tests/
+
+# /Maelstrom.Core.ToJson/
+
+# /Maelstrom.Hadoop.Client/
+
+# /Maelstrom.Ping/Messages/
+/Maelstrom.Ping/Messages/svn://war01svn/rep/mbank_14.1/dev/BuildTools/Externals .buildtools
+/Maelstrom.Ping/Messages/svn://war01svn/rep/mbank_14.1/dev/Maelstrom/Maelstrom.Contracts/Maelstrom.Core_extensions.proto MaelstromExtensions.proto
+/Maelstrom.Ping/Messages/svn://war01svn/rep/mbank_14.1/dev/Arch/Maelstrom.Core/Messages/Messages.proto Messages.proto
+
+# /Maelstrom.RabbitMQCreator/
+
+# /Maelstrom.Reconciliation/
+
+# /Maelstrom.TestSqlDataImporter/
+
+# /Maelstrom.Tests/
+
+# /cache/
+
+# /logs/
+
+# /packages/
