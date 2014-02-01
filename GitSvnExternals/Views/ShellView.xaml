@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             mc:Ignorable="d" Height="300" Width="500"
+             mc:Ignorable="d" Height="300" Width="600"
              d:DesignHeight="300" d:DesignWidth="500">
     <Grid>                        
         <Grid.Resources>
@@ -20,16 +20,32 @@
                 <Button Style="{StaticResource CommandButton}" x:Name="GetExternals">Get Externals</Button>
                 <Button Style="{StaticResource CommandButton}" x:Name="CloneAll">Clone All</Button>
             </StackPanel>
-
-            <ListBox ItemsSource="{Binding Externals}">
+                        
+            <ListBox MinHeight="100" Margin="5,5,5,5" ItemsSource="{Binding Externals}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal">                                                        
                             <TextBlock Text="{Binding LocalPath}" />
+                            <TextBlock Text="   " />
+                            <TextBlock Text="{Binding RemotePath}" />
                         </StackPanel>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center">Remote:</TextBlock>
+                <TextBox Width="150" Margin="20,0,0,0" VerticalAlignment="Center" Text="{Binding NewExternal.RemotePath}"></TextBox>
+
+                <TextBlock Margin="10,0,0,0" VerticalAlignment="Center">Local:</TextBlock>
+                <TextBox Width="150" Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding NewExternal.LocalPath}"></TextBox>
+                
+                <CheckBox Margin="10,0,0,0" IsChecked="{Binding NewExternal.IsFile}">Is File?</CheckBox>                
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">                
+                <Button Style="{StaticResource CommandButton}" x:Name="AddNew">Add</Button>
+            </StackPanel>
 
         </StackPanel>
     </Grid>

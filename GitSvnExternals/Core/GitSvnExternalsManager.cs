@@ -10,12 +10,15 @@ namespace GitSvnExternals.Core
         private readonly string _repoPath;
         private readonly IRunCommand _commandRunner;
         private readonly Lazy<IEnumerable<SvnExternal>> _externals;
+        
+        private readonly List<SvnExternal> _manuallyAdded;
 
         public GitSvnExternalsManager(string repoPath, IRunCommand commandRunner)
         {
             _repoPath = repoPath;
             _commandRunner = commandRunner;
             _externals = new Lazy<IEnumerable<SvnExternal>>(RetriveExternals);
+            _manuallyAdded = new List<SvnExternal>();
         }
 
         public bool IsGitSvnRepo
@@ -29,7 +32,7 @@ namespace GitSvnExternals.Core
 
         public IEnumerable<SvnExternal> Externals
         {
-            get { return _externals.Value; }
+            get { return _externals.Value.Concat(_manuallyAdded); }
         }
 
         private IEnumerable<SvnExternal> RetriveExternals()
@@ -105,6 +108,11 @@ namespace GitSvnExternals.Core
         {
             foreach (var svnExternal in Externals)
                 Clone(svnExternal);
+        }
+
+        public void IncludeManualExternals(IEnumerable<SvnExternal> manuallyAdded)
+        {
+            _manuallyAdded.AddRange(manuallyAdded);
         }
     }
 }
