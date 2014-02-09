@@ -37,7 +37,7 @@ namespace GitSvnExternals.Core
         {
         }
 
-        protected bool CreateLink(string link, string target, LinkTypeFlag type)
+        protected virtual bool CreateLink(string link, string target, LinkTypeFlag type)
         {
             return CreateSymbolicLink(link, target, type);
         }

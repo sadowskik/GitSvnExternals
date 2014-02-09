@@ -68,8 +68,13 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Core\Parsers\ChainedParser.cs" />
+    <Compile Include="Core\IParseExternals.cs" />
+    <Compile Include="Core\Parsers\NewExternalsParser.cs" />
+    <Compile Include="Core\Parsers\OldExternalsParser.cs" />
     <Compile Include="MetroWindowsManager.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
+    <Compile Include="ViewModels\SvnExternalViewModel.cs" />
     <Compile Include="Views\ShellView.xaml.cs">
       <DependentUpon>ShellView.xaml</DependentUpon>
     </Compile>

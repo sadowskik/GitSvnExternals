@@ -13,10 +13,12 @@ namespace GitSvnExternals.Core
 
         public override void Clone(IRunCommand runner, string workingDir)
         {
-            var parentRemote = GetParentUriString(RemotePath);
-            var parentLocal = new Uri(parentRemote).Segments.Last();
+            var parentRemote = GetParentUriString();
+            var parentLocal = new Uri(parentRemote).AbsolutePath.Replace(@"/", @"\");
 
-            var args = string.Format(@"svn clone -r HEAD {0} .git_externals\{1}", parentRemote, parentLocal);
+            CreateDirIfNotExists(parentLocal, workingDir);
+
+            var args = string.Format(@"svn clone -r HEAD {0} git_externals{1}", parentRemote, parentLocal);
             var cmd = new CommandWithArgs("git", args);
 
             runner.Run(cmd, workingDir);
@@ -24,20 +26,30 @@ namespace GitSvnExternals.Core
 
         public override void Link(string workingDir)
         {
-            var parentRemote = GetParentUriString(RemotePath);
-            var parentLocal = new Uri(parentRemote).Segments.Last();
-
-            var fileName = Path.GetFileName(LocalPath) ?? "";
+            var parentRemote = GetParentUriString();
+            var parentLocal = new Uri(parentRemote).AbsolutePath.Replace(@"/", @"\");
+            var fileName = Path.GetFileName(RemotePath.AbsolutePath);
                 
             var link = Path.GetFullPath(Path.Combine(workingDir, LocalPath));
-            var target = Path.GetFullPath(Path.Combine(workingDir, ".git_externals", parentLocal, fileName));
+            var target = Path.GetFullPath(Path.Combine(workingDir, "git_externals" + parentLocal, fileName));
 
             CreateLink(link, target, LinkTypeFlag.File);
         }
 
-        private static string GetParentUriString(Uri uri)
+        private string GetParentUriString()
+        {            
+            var charactersToRemove = RemotePath.AbsoluteUri.Length - RemotePath.Segments.Last().Length - 1;
+            var parentFolder = RemotePath.AbsoluteUri.Remove(charactersToRemove);
+
+            return parentFolder;
+        }
+
+        private static void CreateDirIfNotExists(string absolutePath, string workingDir)
         {
-            return uri.AbsoluteUri.Remove(uri.AbsoluteUri.Length - uri.Segments.Last().Length - 1);
+            var dirToCreate = Path.GetFullPath(Path.Combine(workingDir, "git_externals" + absolutePath));
+
+            if (!Directory.Exists(dirToCreate))
+                Directory.CreateDirectory(dirToCreate);
         }
     }
 }

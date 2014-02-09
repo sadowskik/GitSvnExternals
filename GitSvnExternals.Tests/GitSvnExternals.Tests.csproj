@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.2.1312.1622\lib\net40\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="NFluent">
       <HintPath>..\packages\NFluent.1.0.0.0\lib\net40\NFluent.dll</HintPath>
     </Reference>
@@ -52,10 +55,13 @@
   <ItemGroup>
     <Compile Include="CommandRunnerTests.cs" />
     <Compile Include="DirectorySvnExternalTests.cs" />
-    <Compile Include="FakeRunner.cs" />
+    <Compile Include="Parsers\OldSyntaxData.cs" />
+    <Compile Include="Parsers\NewSyntaxData.cs" />
+    <Compile Include="RunnerMock.cs" />
     <Compile Include="FileExternalTests.cs" />
     <Compile Include="GitSvnExternalsManagerTests.cs" />
     <Compile Include="LongRunning.cs" />
+    <Compile Include="Parsers\ParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

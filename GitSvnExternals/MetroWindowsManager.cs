@@ -57,7 +57,7 @@ namespace GitSvnExternals
             }
             else
             {
-                result = new MetroWindow {Content = view, Height = 300, Width = 500};
+                result = new MetroWindow {Content = view, Height = 400, Width = 600};
             }
 
             AddMetroResources(result);
