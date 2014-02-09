@@ -100,7 +100,7 @@ namespace GitSvnExternals.Tests
                 remotePath: new Uri(@"https://subversion.assembla.com/svn/svnandgittest/trunk/Externals"),
                 localPath: ".buildtools"));
 
-            Check.That(Directory.Exists(TestRepoPath + @"\.git_externals")).IsTrue();
+            Check.That(Directory.Exists(TestRepoPath + @"\git_externals")).IsTrue();
         }                
     }
 }
