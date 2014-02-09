@@ -21,6 +21,7 @@
                 <Button Style="{StaticResource CommandButton}" x:Name="GetExternals">Get Externals</Button>
                 <Button Style="{StaticResource CommandButton}" x:Name="CloneAll">Clone All</Button>
                 <Button Style="{StaticResource CommandButton}" x:Name="RemoveSelected">Remove</Button>
+                <Button Style="{StaticResource CommandButton}" x:Name="LoadFromFile">Load from file</Button>
             </StackPanel>
 
             <DataGrid ItemsSource="{Binding Externals}" SelectedItem="{Binding SelectedExternal, Mode=TwoWay}"

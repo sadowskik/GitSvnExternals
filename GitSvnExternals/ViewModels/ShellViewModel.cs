@@ -4,6 +4,7 @@ using System.Linq;
 using Caliburn.Micro;
 using GitSvnExternals.Core;
 using GitSvnExternals.Core.Parsers;
+using Microsoft.Win32;
 
 namespace GitSvnExternals.ViewModels
 {
@@ -93,6 +94,23 @@ namespace GitSvnExternals.ViewModels
             Externals.Remove(SelectedExternal);
         }
 
+        public void LoadFromFile()
+        {
+            var fileDialog = new OpenFileDialog();
+            fileDialog.ShowDialog();
+
+            var manager = CreateManager();
+            manager.IncludeManualExternals(fileDialog.FileName);
+
+            var models = manager.Externals.Select(MapToModel).ToList();
+            Externals = new ObservableCollection<SvnExternalViewModel>(models);
+        }
+
+        public bool CanLoadFromFile
+        {
+            get { return CanGetExternals; }
+        }
+
         public bool CanRemoveSelected
         {
             get
@@ -131,6 +149,7 @@ namespace GitSvnExternals.ViewModels
                 _repoPath = value;
                 NotifyOfPropertyChange(() => RepoPath);
                 NotifyOfPropertyChange(() => CanGetExternals);
+                NotifyOfPropertyChange(() => CanLoadFromFile);
                 NotifyOfPropertyChange(() => CanCloneAll);
             }
         }

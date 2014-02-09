@@ -81,5 +81,16 @@ namespace GitSvnExternals.Core
         {
             _manuallyAdded.AddRange(manuallyAdded);
         }
+
+        public void IncludeManualExternals(string fileName)
+        {
+            string[] linesToParse = File.ReadAllLines(fileName);
+
+            var parsedExternals = linesToParse
+                .Select(line => _parser.ParseLine(line))
+                .Where(external => external != SvnExternal.Empty);
+
+            IncludeManualExternals(parsedExternals);
+        }
     }
 }
