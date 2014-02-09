@@ -6,23 +6,18 @@ using GitSvnExternals.Core;
 
 namespace GitSvnExternals.Tests.Parsers
 {
-    public class NewSyntaxData : IEnumerable<object[]>
+    public class OldSyntaxData : IEnumerable<object[]>
     {
         public readonly List<string> LinesToParse = new List<string>
         {            
             "/.buildtools svn://war01svn/rep/mbank_14.1/dev/BuildTools/Externals",
-            "/https://subversion.assembla.com/svn/svnandgittest/trunk/Externals .buildtools",
-            "/https://subversion.assembla.com/svn/svnandgittest/trunk/ExternalsWithFile1/x.txt x.txt",
-            "/https://subversion.assembla.com/svn/svnandgittest/trunk/ExternalsWithFile2/y.txt y.txt",
+            "/Maelstrom.Ping/Messages/svn://war01svn/rep/mbank_14.1/dev/BuildTools/Externals .buildtools",
+            "/Maelstrom.Ping/Messages/svn://war01svn/rep/mbank_14.1/dev/Maelstrom/Maelstrom.Contracts/Maelstrom.Core_extensions.proto MaelstromExtensions.proto",
+            "/Maelstrom.Ping/Messages/svn://war01svn/rep/mbank_14.1/dev/Arch/Maelstrom.Core/Messages/Messages.proto Messages.proto"
         };
 
         public readonly List<SvnExternal> ExpectedExternals = new List<SvnExternal>
-        {           
-            new DirectoryExternal(
-                new Uri(
-                @"svn://war01svn/rep/mbank_14.1/dev/BuildTools/Externals"),
-                ".buildtools"),
-
+        {            
             new DirectoryExternal(
                 new Uri(
                 @"https://subversion.assembla.com/svn/svnandgittest/trunk/Externals"),
@@ -58,9 +53,7 @@ namespace GitSvnExternals.Tests.Parsers
                 string.Empty,
                 "nonParsabableLine",
                 "# /",
-
-                //old syntax 
-                "/Maelstrom.Ping/Messages/svn://war01svn/rep/mbank_14.1/dev/Arch/Maelstrom.Core/Messages/Messages.proto Messages.proto",                
+                "# /Maelstrom.Core.ToJson/"
             };
 
             public IEnumerator<object[]> GetEnumerator()

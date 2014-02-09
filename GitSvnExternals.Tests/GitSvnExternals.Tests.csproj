@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="CommandRunnerTests.cs" />
     <Compile Include="DirectorySvnExternalTests.cs" />
+    <Compile Include="Parsers\OldSyntaxData.cs" />
     <Compile Include="Parsers\NewSyntaxData.cs" />
     <Compile Include="RunnerMock.cs" />
     <Compile Include="FileExternalTests.cs" />

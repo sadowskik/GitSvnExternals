@@ -30,4 +30,30 @@ namespace GitSvnExternals.Tests.Parsers
             Check.That(parsedExternal).IsEqualTo(SvnExternal.Empty);
         }  
     }
+
+    public class OldParserTests
+    {
+        private readonly OldExternalsParser _parser;
+
+        public OldParserTests()
+        {
+            _parser = new OldExternalsParser();
+        }
+
+        [Theory, ClassData(typeof(OldSyntaxData))]
+        public void parse_new_syntax(string lineToParse, SvnExternal expectedExternal)
+        {
+            var parsedExternal = _parser.ParseLine(lineToParse);
+
+            Check.That(parsedExternal).IsEqualTo(expectedExternal);
+        }
+
+        [Theory, ClassData(typeof(OldSyntaxData.InvalidLines))]
+        public void return_empty_external_when_sth_is_wrong(string lineToParse)
+        {
+            var parsedExternal = _parser.ParseLine(lineToParse);
+
+            Check.That(parsedExternal).IsEqualTo(SvnExternal.Empty);
+        }
+    }
 }

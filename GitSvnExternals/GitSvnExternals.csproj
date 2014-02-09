@@ -71,6 +71,7 @@
     <Compile Include="Core\Parsers\ChainedParser.cs" />
     <Compile Include="Core\IParseExternals.cs" />
     <Compile Include="Core\Parsers\NewExternalsParser.cs" />
+    <Compile Include="Core\Parsers\OldExternalsParser.cs" />
     <Compile Include="MetroWindowsManager.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
     <Compile Include="ViewModels\SvnExternalViewModel.cs" />

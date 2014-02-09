@@ -25,10 +25,26 @@ namespace GitSvnExternals.Core.Parsers
 
             var localPath = ExtractLocalPath(columns, externalUri);
 
-            if (Path.HasExtension(localPath) && Path.GetExtension(localPath) != localPath)
-                return new FileExternal(new Uri(externalUri.Substring(1)), localPath);
+            if (IsFile(localPath))
+                return new FileExternal(new Uri(TryRemoveSlash(externalUri)), TryRemoveSlash(localPath));
 
-            return new DirectoryExternal(new Uri(externalUri.Substring(1)), localPath);
+            return new DirectoryExternal(new Uri(TryRemoveSlash(externalUri)), TryRemoveSlash(localPath));
+        }
+
+        private static bool IsFile(string localPath)
+        {
+            var extension = Path.GetExtension(localPath);
+
+            return extension != null
+                   && Path.HasExtension(localPath)
+                   && !extension.Equals(Path.GetFileName(localPath));
+        }
+
+        private static string TryRemoveSlash(string path)
+        {            
+            return path[0] == '/'
+                ? path.Substring(1)
+                : path;
         }
 
         private static string ExtractLocalPath(IList<string> columns, string externalUri)
