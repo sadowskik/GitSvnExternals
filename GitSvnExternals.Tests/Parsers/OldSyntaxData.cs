@@ -9,8 +9,7 @@ namespace GitSvnExternals.Tests.Parsers
     public class OldSyntaxData : IEnumerable<object[]>
     {
         public readonly List<string> LinesToParse = new List<string>
-        {            
-            "/.buildtools svn://war01svn/rep/mbank_14.1/dev/BuildTools/Externals",
+        {                        
             "/Maelstrom.Ping/Messages/svn://war01svn/rep/mbank_14.1/dev/BuildTools/Externals .buildtools",
             "/Maelstrom.Ping/Messages/svn://war01svn/rep/mbank_14.1/dev/Maelstrom/Maelstrom.Contracts/Maelstrom.Core_extensions.proto MaelstromExtensions.proto",
             "/Maelstrom.Ping/Messages/svn://war01svn/rep/mbank_14.1/dev/Arch/Maelstrom.Core/Messages/Messages.proto Messages.proto"
@@ -20,17 +19,17 @@ namespace GitSvnExternals.Tests.Parsers
         {            
             new DirectoryExternal(
                 new Uri(
-                @"https://subversion.assembla.com/svn/svnandgittest/trunk/Externals"),
-                ".buildtools"),
+                @"svn://war01svn/rep/mbank_14.1/dev/BuildTools/Externals"),
+                "Maelstrom.Ping/Messages/.buildtools"),
 
             new FileExternal(new Uri(
-                @"https://subversion.assembla.com/svn/svnandgittest/trunk/ExternalsWithFile1/x.txt"),
-                "x.txt"),
+                @"svn://war01svn/rep/mbank_14.1/dev/Maelstrom/Maelstrom.Contracts/Maelstrom.Core_extensions.proto"),
+                "Maelstrom.Ping/Messages/MaelstromExtensions.proto"),
 
             new FileExternal(
                 new Uri(
-                @"https://subversion.assembla.com/svn/svnandgittest/trunk/ExternalsWithFile2/y.txt"),
-                "y.txt")
+                @"svn://war01svn/rep/mbank_14.1/dev/Arch/Maelstrom.Core/Messages/Messages.proto"),
+                "Maelstrom.Ping/Messages/Messages.proto")
         };
 
         public IEnumerator<object[]> GetEnumerator()

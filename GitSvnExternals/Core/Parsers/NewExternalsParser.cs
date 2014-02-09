@@ -41,10 +41,8 @@ namespace GitSvnExternals.Core.Parsers
         }
 
         private static string TryRemoveSlash(string path)
-        {            
-            return path[0] == '/'
-                ? path.Substring(1)
-                : path;
+        {
+            return path.Trim('/');
         }
 
         private static string ExtractLocalPath(IList<string> columns, string externalUri)

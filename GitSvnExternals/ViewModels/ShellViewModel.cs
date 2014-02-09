@@ -36,8 +36,13 @@ namespace GitSvnExternals.ViewModels
 
         private GitSvnExternalsManager CreateManager()
         {
-            return new GitSvnExternalsManager(RepoPath, new ConsoleRunner(),
-                new ChainedParser(new[] {new NewExternalsParser()}));
+            var parser = new ChainedParser(new IParseExternals[]
+            {
+                new NewExternalsParser(),
+                new OldExternalsParser()
+            });
+
+            return new GitSvnExternalsManager(RepoPath, new ConsoleRunner(), parser);
         }
 
         public bool CanGetExternals
