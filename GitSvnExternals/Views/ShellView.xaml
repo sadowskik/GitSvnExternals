@@ -4,18 +4,22 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-             mc:Ignorable="d" Height="300" Width="600"
+             mc:Ignorable="d" Height="300" Width="700" MinWidth="700" MinHeight="300"
              d:DesignHeight="300" d:DesignWidth="500">
-    <Grid>
+    <Grid Margin="5,5,5,5">
         <Grid.Resources>
             <Style x:Key="CommandButton" TargetType="Button" BasedOn="{StaticResource MetroButton}">
                 <Setter Property="Margin" Value="5,5,5,5" />
                 <Setter Property="Width" Value="90" />
             </Style>
         </Grid.Resources>
-
-        <StackPanel Margin="5,5,5,5" Orientation="Vertical">
-            <StackPanel Orientation="Horizontal">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="35"/>
+        </Grid.RowDefinitions>
+        
+            <StackPanel Grid.Row="0" Orientation="Horizontal">
                 <TextBlock VerticalAlignment="Center">Repository:</TextBlock>
                 <TextBox Width="200" Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding RepoPath}" />
                 <Button Style="{StaticResource CommandButton}" x:Name="GetExternals">Get Externals</Button>
@@ -25,7 +29,7 @@
             </StackPanel>
 
             <DataGrid ItemsSource="{Binding Externals}" SelectedItem="{Binding SelectedExternal, Mode=TwoWay}"
-                      IsReadOnly="True" AutoGenerateColumns="False" Margin="5,5,5,5">
+                      IsReadOnly="True" AutoGenerateColumns="False" Margin="5,5,5,5" Grid.Row="1">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Remote" Binding="{Binding RemotePath}" />
                     <DataGridTextColumn Header="Local" Binding="{Binding LocalPath}" />
@@ -34,21 +38,17 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-            <StackPanel Orientation="Horizontal">
-                <TextBlock VerticalAlignment="Center">Remote:</TextBlock>
-                <TextBox Width="150" Margin="20,0,0,0" VerticalAlignment="Center"
+        <StackPanel Orientation="Horizontal" Grid.Row="2">
+            <TextBlock VerticalAlignment="Center">Remote:</TextBlock>
+            <TextBox Width="150" Margin="20,0,0,0" VerticalAlignment="Center"
                          Text="{Binding NewExternal.RemotePath}" />
 
-                <TextBlock Margin="10,0,0,0" VerticalAlignment="Center">Local:</TextBlock>
-                <TextBox Width="150" Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding NewExternal.LocalPath}" />
+            <TextBlock Margin="10,0,0,0" VerticalAlignment="Center">Local:</TextBlock>
+            <TextBox Width="150" Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding NewExternal.LocalPath}" />
 
-                <CheckBox Margin="10,0,0,0" IsChecked="{Binding NewExternal.IsFile}">Is File?</CheckBox>
-            </StackPanel>
+            <CheckBox Margin="10,0,0,0" IsChecked="{Binding NewExternal.IsFile}">Is File?</CheckBox>
 
-            <StackPanel Orientation="Horizontal">
-                <Button Style="{StaticResource CommandButton}" x:Name="AddNew">Add</Button>
-            </StackPanel>
-
+            <Button Style="{StaticResource CommandButton}" x:Name="AddNew">Add</Button>
         </StackPanel>
     </Grid>
 </controls:MetroWindow>

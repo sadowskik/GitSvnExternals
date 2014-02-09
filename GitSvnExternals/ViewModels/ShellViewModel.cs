@@ -29,10 +29,9 @@ namespace GitSvnExternals.ViewModels
                 return;
 
             var manager = CreateManager();
-            
-            manager.Externals
-                .Select(MapToModel).ToList()
-                .ForEach(x => Externals.Add(x));
+
+            var models = manager.Externals.Select(MapToModel).ToList();
+            Externals = new ObservableCollection<SvnExternalViewModel>(models);
         }
 
         private GitSvnExternalsManager CreateManager()
@@ -96,8 +95,9 @@ namespace GitSvnExternals.ViewModels
 
         public void LoadFromFile()
         {
-            var fileDialog = new OpenFileDialog();
-            fileDialog.ShowDialog();
+            var fileDialog = new OpenFileDialog();            
+            if (!fileDialog.ShowDialog().Value)
+                return;
 
             var manager = CreateManager();
             manager.IncludeManualExternals(fileDialog.FileName);
