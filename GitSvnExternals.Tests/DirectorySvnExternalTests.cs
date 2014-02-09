@@ -13,7 +13,7 @@ namespace GitSvnExternals.Tests
         [Fact]
         public void clones_external_as_a_separate_repository()
         {
-            var runner = new FakeRunner();
+            var runner = new RunnerMock();
 
             var external = new DirectoryExternal(
                 remotePath: new Uri(@"https://subversion.assembla.com/svn/svnandgittest/trunk/Externals"),

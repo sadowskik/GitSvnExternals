@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Caliburn.Micro;
 using GitSvnExternals.Core;
+using GitSvnExternals.Core.Parsers;
 
 namespace GitSvnExternals.ViewModels
 {
@@ -26,25 +27,31 @@ namespace GitSvnExternals.ViewModels
             if (!CanGetExternals)
                 return;
 
-            var manager = new GitSvnExternalsManager(RepoPath, new ConsoleRunner());
+            var manager = CreateManager();
             
             manager.Externals
                 .Select(MapToModel).ToList()
                 .ForEach(x => Externals.Add(x));
         }
 
+        private GitSvnExternalsManager CreateManager()
+        {
+            return new GitSvnExternalsManager(RepoPath, new ConsoleRunner(),
+                new ChainedParser(new[] {new NewExternalsParser()}));
+        }
+
         public bool CanGetExternals
         {
             get
             {
-                var manager = new GitSvnExternalsManager(RepoPath, new ConsoleRunner());
+                var manager = CreateManager();
                 return manager.IsGitSvnRepo;
             }
         }
 
         public void CloneAll()
         {
-            var manager = new GitSvnExternalsManager(RepoPath, new ConsoleRunner());
+            var manager = CreateManager();
 
             if (!manager.IsGitSvnRepo)
                 return;

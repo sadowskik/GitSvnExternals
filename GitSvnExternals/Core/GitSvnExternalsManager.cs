@@ -9,14 +9,16 @@ namespace GitSvnExternals.Core
     {
         private readonly string _repoPath;
         private readonly IRunCommand _commandRunner;
+        private readonly IParseExternals _parser;
         private readonly Lazy<IEnumerable<SvnExternal>> _externals;
         
         private readonly List<SvnExternal> _manuallyAdded;
 
-        public GitSvnExternalsManager(string repoPath, IRunCommand commandRunner)
+        public GitSvnExternalsManager(string repoPath, IRunCommand commandRunner, IParseExternals parser)
         {
             _repoPath = repoPath;
             _commandRunner = commandRunner;
+            _parser = parser;
             _externals = new Lazy<IEnumerable<SvnExternal>>(RetriveExternals);
             _manuallyAdded = new List<SvnExternal>();
         }
@@ -32,7 +34,12 @@ namespace GitSvnExternals.Core
 
         public IEnumerable<SvnExternal> Externals
         {
-            get { return _externals.Value.Concat(_manuallyAdded); }
+            get
+            {
+                return _externals.Value
+                    .Concat(_manuallyAdded)
+                    .Where(x => x != SvnExternal.Empty);
+            }
         }
 
         private IEnumerable<SvnExternal> RetriveExternals()
@@ -42,54 +49,14 @@ namespace GitSvnExternals.Core
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
-                    var external = ParseExternalLine(line);
+                    var external = _parser.ParseLine(line);
 
                     if (external != SvnExternal.Empty)
                         yield return external;
                 }
             }
         }
-
-        private static SvnExternal ParseExternalLine(string line)
-        {
-            if (string.IsNullOrEmpty(line))
-                return SvnExternal.Empty;
-
-            var columns = line.Split(' ').ToList();
-
-            if (CannotBeParsed(columns))
-                return SvnExternal.Empty;
-            
-            var externalUri = columns
-                .FirstOrDefault(x => Uri.IsWellFormedUriString(x.Substring(1), UriKind.Absolute));
-
-            if (externalUri == null)
-                return SvnExternal.Empty;
-
-            var localPath = ExtractLocalPath(columns, externalUri);
-
-            if (Path.HasExtension(localPath) && Path.GetExtension(localPath) != localPath)
-                return new FileExternal(new Uri(externalUri.Substring(1)), localPath);
-
-            return new DirectoryExternal(new Uri(externalUri.Substring(1)), localPath);
-        }
-
-        private static string ExtractLocalPath(IList<string> columns, string externalUri)
-        {
-            var uriIndex = columns.IndexOf(externalUri);
-            int pathIndex = uriIndex == 0 ? 1 : 0;
-
-            var localPath = columns[pathIndex];
-            return localPath;
-        }
-
-        private static bool CannotBeParsed(IReadOnlyList<string> columns)
-        {
-            return columns.Count != 2
-                   || string.IsNullOrEmpty(columns[0])
-                   || string.IsNullOrEmpty(columns[1]);
-        }
-
+                
         public void Clone(SvnExternal svnExternal)
         {
             var externalsDir = Path.Combine(_repoPath, ".git_externals");
