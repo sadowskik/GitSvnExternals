@@ -11,7 +11,7 @@ namespace GitSvnExternals.Core
         private readonly string _repoPath;
         private readonly IRunCommand _commandRunner;
         private readonly IParseExternals _parser;
-        private readonly Lazy<IEnumerable<SvnExternal>> _externals;
+        private readonly Lazy<IList<SvnExternal>> _externals;
         
         private readonly List<SvnExternal> _manuallyAdded;
 
@@ -20,7 +20,7 @@ namespace GitSvnExternals.Core
             _repoPath = repoPath;
             _commandRunner = commandRunner;
             _parser = parser;
-            _externals = new Lazy<IEnumerable<SvnExternal>>(RetriveExternals);
+            _externals = new Lazy<IList<SvnExternal>>(() => RetriveExternals().ToList());
             _manuallyAdded = new List<SvnExternal>();
         }
 

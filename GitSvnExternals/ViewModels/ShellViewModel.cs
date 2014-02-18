@@ -11,10 +11,12 @@ namespace GitSvnExternals.ViewModels
     public class ShellViewModel : PropertyChangedBase
     {
         private string _repoPath;
+        private GitSvnExternalsManager _manager;
+
         private ObservableCollection<SvnExternalViewModel> _externals;        
         private SvnExternalViewModel _newExternal;
         private SvnExternalViewModel _selectedExternal;
-
+                
         public ShellViewModel()
         {
             RepoPath = "Paste your repo path here...";
@@ -27,46 +29,30 @@ namespace GitSvnExternals.ViewModels
         {
             if (!CanGetExternals)
                 return;
-
-            var manager = CreateManager();
-
-            var models = manager.Externals.Select(MapToModel).ToList();
+            
+            var models = _manager.Externals.Select(MapToModel).ToList();
             Externals = new ObservableCollection<SvnExternalViewModel>(models);
-        }
-
-        private GitSvnExternalsManager CreateManager()
-        {
-            var parser = new ChainedParser(new IParseExternals[]
-            {
-                new NewExternalsParser(),
-                new OldExternalsParser()
-            });
-
-            return new GitSvnExternalsManager(RepoPath, new ConsoleRunner(), parser);
         }
 
         public bool CanGetExternals
         {
             get
-            {
-                var manager = CreateManager();
-                return manager.IsGitSvnRepo;
+            {                
+                return _manager.IsGitSvnRepo;
             }
         }
 
         public void CloneAll()
-        {
-            var manager = CreateManager();
-
-            if (!manager.IsGitSvnRepo)
+        {            
+            if (!_manager.IsGitSvnRepo)
                 return;
 
             var manuallyAdded = Externals
                 .Where(x => x.ManuallyAdded)
                 .Select(MapFrom);
 
-            manager.IncludeManualExternals(manuallyAdded);
-            manager.CloneAllExternals();
+            _manager.IncludeManualExternals(manuallyAdded);
+            _manager.CloneAllExternals();
         }
 
         public bool CanCloneAll
@@ -98,11 +84,10 @@ namespace GitSvnExternals.ViewModels
             var fileDialog = new OpenFileDialog();            
             if (!fileDialog.ShowDialog().Value)
                 return;
+            
+            _manager.IncludeManualExternals(fileDialog.FileName);
 
-            var manager = CreateManager();
-            manager.IncludeManualExternals(fileDialog.FileName);
-
-            var models = manager.Externals.Select(MapToModel).ToList();
+            var models = _manager.Externals.Select(MapToModel).ToList();
             Externals = new ObservableCollection<SvnExternalViewModel>(models);
         }
 
@@ -147,11 +132,25 @@ namespace GitSvnExternals.ViewModels
             {
                 if (value == _repoPath) return;
                 _repoPath = value;
+
+                _manager = CreateManager();
+
                 NotifyOfPropertyChange(() => RepoPath);
                 NotifyOfPropertyChange(() => CanGetExternals);
                 NotifyOfPropertyChange(() => CanLoadFromFile);
                 NotifyOfPropertyChange(() => CanCloneAll);
             }
+        }
+
+        private GitSvnExternalsManager CreateManager()
+        {
+            var parser = new ChainedParser(new IParseExternals[]
+            {
+                new NewExternalsParser(),
+                new OldExternalsParser()
+            });
+
+            return new GitSvnExternalsManager(RepoPath, new ConsoleRunner(), parser);
         }
 
         public ObservableCollection<SvnExternalViewModel> Externals
