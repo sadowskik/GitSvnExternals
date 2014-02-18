@@ -3,8 +3,8 @@ using System.Runtime.InteropServices;
 
 namespace GitSvnExternals.Core
 {
-    public class SvnExternal : IEquatable<SvnExternal>
-    {
+    public abstract class SvnExternal : IEquatable<SvnExternal>
+    {        
         protected enum LinkTypeFlag
         {
             File = 0,
@@ -18,11 +18,10 @@ namespace GitSvnExternals.Core
         public Uri RemotePath { get; private set; }
         public string LocalPath { get; private set; }
 
-        public static SvnExternal Empty
-        {
-            get { return new SvnExternal(null, null); }
-        }
+        public abstract string CloneDir { get; }
 
+        public static readonly SvnExternal Empty = new EmptyExternal();
+        
         protected SvnExternal(Uri remotePath, string localPath)
         {
             RemotePath = remotePath;
@@ -73,6 +72,19 @@ namespace GitSvnExternals.Core
         public static bool operator !=(SvnExternal left, SvnExternal right)
         {
             return !Equals(left, right);
+        }
+
+        private class EmptyExternal : SvnExternal
+        {
+            public EmptyExternal()
+                : base(null, null)
+            {
+            }
+
+            public override string CloneDir
+            {
+                get { return string.Empty; }
+            }
         }
     }
 }

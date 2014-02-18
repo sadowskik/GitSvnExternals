@@ -51,13 +51,13 @@ namespace GitSvnExternals.Core
                 {
                     var external = _parser.ParseLine(line);
 
-                    if (external != SvnExternal.Empty)
+                    if (external != SvnExternal.Empty && external != null)
                         yield return external;
                 }
             }
         }
-                
-        public void Clone(SvnExternal svnExternal)
+
+        private void Clone(SvnExternal svnExternal)
         {
             var externalsDir = Path.Combine(_repoPath, "git_externals");
 
@@ -68,13 +68,19 @@ namespace GitSvnExternals.Core
             }
 
             svnExternal.Clone(_commandRunner, _repoPath);
-            svnExternal.Link(_repoPath);
         }
 
         public void CloneAllExternals()
         {
-            foreach (var svnExternal in Externals)
-                Clone(svnExternal);
+            var cloneGroups = Externals.GroupBy(external => external.CloneDir);
+
+            foreach (var cloneGroup in cloneGroups)
+            {
+                Clone(cloneGroup.First());
+
+                foreach (var svnExternal in cloneGroup)
+                    svnExternal.Link(_repoPath);
+            }
         }
 
         public void IncludeManualExternals(IEnumerable<SvnExternal> manuallyAdded)

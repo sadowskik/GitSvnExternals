@@ -92,15 +92,41 @@ namespace GitSvnExternals.Tests
 
             Check.That(_gitSvnExternalsManager.Externals).ContainsExactly(parsedExternal);
         }
+                
+        [Fact]
+        public void clones_externals_in_groups_to_avoid_unecessary_clones()
+        {
+            TestableSvnExternal.ResetCounters();
+            _gitSvnExternalsManager.IncludeManualExternals(new SvnExternal[]
+            {
+                new TestableSvnExternal(willBeClonedTo: @"dir1"),
+                new TestableSvnExternal(willBeClonedTo: @"dir1"),
+                new TestableSvnExternal(willBeClonedTo: @"dir2"),
+                new TestableSvnExternal(willBeClonedTo: @"dir2"),
+                new TestableSvnExternal(willBeClonedTo: @"dir3")
+            });
+
+            _gitSvnExternalsManager.CloneAllExternals();
+
+            Check.That(TestableSvnExternal.ClonedTimes).IsEqualTo(3);
+        }
 
         [Fact]
-        public void stores_externals_in_specific_directory()
-        {            
-            _gitSvnExternalsManager.Clone(new DirectoryExternal(
-                remotePath: new Uri(@"https://subversion.assembla.com/svn/svnandgittest/trunk/Externals"),
-                localPath: ".buildtools"));
+        public void each_external_is_linked_to_corresponding_clone_dir()
+        {
+            TestableSvnExternal.ResetCounters();
+            _gitSvnExternalsManager.IncludeManualExternals(new SvnExternal[]
+            {
+                new TestableSvnExternal(willBeClonedTo: @"dir1"),
+                new TestableSvnExternal(willBeClonedTo: @"dir1"),
+                new TestableSvnExternal(willBeClonedTo: @"dir2"),
+                new TestableSvnExternal(willBeClonedTo: @"dir2"),
+                new TestableSvnExternal(willBeClonedTo: @"dir3")
+            });
 
-            Check.That(Directory.Exists(TestRepoPath + @"\git_externals")).IsTrue();
-        }                
+            _gitSvnExternalsManager.CloneAllExternals();
+
+            Check.That(TestableSvnExternal.LinkedTimes).IsEqualTo(5);            
+        }
     }
 }

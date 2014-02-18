@@ -52,9 +52,45 @@ namespace GitSvnExternals.Tests
             TargetPath = target;
             return true;
         }
-
+                
         public string LinkPath { get; private set; }
 
         public string TargetPath { get; private set; }        
+    }
+
+    public class TestableSvnExternal : SvnExternal
+    {
+        private readonly string _willBeClonedTo;
+
+        public static int ClonedTimes { get; private set; }
+        
+        public static int LinkedTimes { get; private set; }
+
+        public TestableSvnExternal(string willBeClonedTo)
+            : base(null, null)
+        {
+            _willBeClonedTo = willBeClonedTo;
+        }
+
+        public override string CloneDir
+        {
+            get { return _willBeClonedTo; }
+        }
+
+        public override void Clone(IRunCommand runner, string workingDir)
+        {
+            ClonedTimes++;
+        }
+
+        public override void Link(string workingDir)
+        {
+            LinkedTimes++;
+        }
+
+        public static void ResetCounters()
+        {
+            ClonedTimes = 0;
+            LinkedTimes = 0;
+        }
     }
 }
