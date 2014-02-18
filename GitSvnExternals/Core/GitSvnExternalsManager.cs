@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GitSvnExternals.Core
 {
@@ -74,13 +75,13 @@ namespace GitSvnExternals.Core
         {
             var cloneGroups = Externals.GroupBy(external => external.CloneDir);
 
-            foreach (var cloneGroup in cloneGroups)
-            {
+            Parallel.ForEach(cloneGroups, cloneGroup =>
+            {                
                 Clone(cloneGroup.First());
 
                 foreach (var svnExternal in cloneGroup)
                     svnExternal.Link(_repoPath);
-            }
+            });            
         }
 
         public void IncludeManualExternals(IEnumerable<SvnExternal> manuallyAdded)
