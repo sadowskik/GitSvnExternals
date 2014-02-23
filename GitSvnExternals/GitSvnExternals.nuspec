@@ -11,4 +11,7 @@
     <releaseNotes>Usable Version</releaseNotes>
     <copyright>Copyright 2013</copyright>    
   </metadata>
+  <files>
+    <file src="bin\Release\*.dll" target="lib\net451" />
+  </files>  
 </package>
