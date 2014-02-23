@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace GitSvnExternals.Core
 {
@@ -10,7 +11,7 @@ namespace GitSvnExternals.Core
         private readonly string _repoPath;
         private readonly IRunCommand _commandRunner;
         private readonly IParseExternals _parser;
-        private readonly Lazy<IEnumerable<SvnExternal>> _externals;
+        private readonly Lazy<IList<SvnExternal>> _externals;
         
         private readonly List<SvnExternal> _manuallyAdded;
 
@@ -19,7 +20,7 @@ namespace GitSvnExternals.Core
             _repoPath = repoPath;
             _commandRunner = commandRunner;
             _parser = parser;
-            _externals = new Lazy<IEnumerable<SvnExternal>>(RetriveExternals);
+            _externals = new Lazy<IList<SvnExternal>>(() => RetriveExternals().ToList());
             _manuallyAdded = new List<SvnExternal>();
         }
 
@@ -51,13 +52,13 @@ namespace GitSvnExternals.Core
                 {
                     var external = _parser.ParseLine(line);
 
-                    if (external != SvnExternal.Empty)
+                    if (external != SvnExternal.Empty && external != null)
                         yield return external;
                 }
             }
         }
-                
-        public void Clone(SvnExternal svnExternal)
+
+        private void Clone(SvnExternal svnExternal)
         {
             var externalsDir = Path.Combine(_repoPath, "git_externals");
 
@@ -68,13 +69,19 @@ namespace GitSvnExternals.Core
             }
 
             svnExternal.Clone(_commandRunner, _repoPath);
-            svnExternal.Link(_repoPath);
         }
 
         public void CloneAllExternals()
         {
-            foreach (var svnExternal in Externals)
-                Clone(svnExternal);
+            var cloneGroups = Externals.GroupBy(external => external.CloneDir);
+
+            Parallel.ForEach(cloneGroups, cloneGroup =>
+            {                
+                Clone(cloneGroup.First());
+
+                foreach (var svnExternal in cloneGroup)
+                    svnExternal.Link(_repoPath);
+            });            
         }
 
         public void IncludeManualExternals(IEnumerable<SvnExternal> manuallyAdded)

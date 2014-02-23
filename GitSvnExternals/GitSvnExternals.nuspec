@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>KS</authors>    
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>        
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Git-Svn externals manager</description>
+    <releaseNotes>Usable Version</releaseNotes>
+    <copyright>Copyright 2013</copyright>    
+  </metadata>
+  <files>
+    <file src="bin\Release\*.dll" target="lib\net451" />
+  </files>  
+</package>
