@@ -38,6 +38,10 @@ namespace GitSvnExternals.Core
             var link = Path.GetFullPath(Path.Combine(workingDir, LocalPath));
             var target = Path.GetFullPath(Path.Combine(workingDir, "git_externals" + CloneDir, fileName));
 
+            var linkParentDir = Directory.GetParent(link);
+            if (!linkParentDir.Exists)
+                linkParentDir.Create();
+
             CreateLink(link, target, LinkTypeFlag.File);
         }
 
